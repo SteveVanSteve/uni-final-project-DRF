@@ -1,4 +1,5 @@
 from django.db import models
+from arrivalProbabilities.models import ArrivalProbabilities
 
 
 class ArrivalProbabilities(models.Model):
