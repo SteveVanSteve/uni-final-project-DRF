@@ -7,10 +7,7 @@ import csv
 
 class ArrivalProbabilities(models.Model):
     arrivalProbId = models.IntegerField(
-        primary_key=True), (_("Arrival Probability ID"))
+        primary_key=True), default = None, (_("Arrival Probability ID"))
     binEdge = models.FloatField(null=False), (_("Bin Edge"))
     binEntry = models.FloatField(null=True), (_("Bin Entry"))
     hist = (numpy.array([]), numpy.array([]))
-
-    class Meta:
-        delimiter = ","
