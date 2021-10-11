@@ -2,16 +2,20 @@ from django.db import models
 import csv
 import os
 import numpy
+import numpy_hist_io
 
 
 class ArrivalProbabilities(models.Model):
-    arrivalProbId = models.IntegerField(primary_key=True)
-    binEdge = models.FloatField(null=False)
-    binEntry = models.FloatField(null=True)
+    arrivalProbId = models.IntegerField(
+        primary_key=True), (_("Arrival Probability ID"))
+    binEdge = models.FloatField(null=False), (_("Bin Edge"))
+    binEntry = models.FloatField(null=True), (_("Bin Entry"))
     hist = (numpy.array([]), numpy.array([]))
 
+    class Meta:
+        delimiter = ","
 
-# Below is code for reference
+
 # import numpy
 # import numpy_hist_io
 
