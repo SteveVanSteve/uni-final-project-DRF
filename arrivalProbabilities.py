@@ -89,7 +89,7 @@ def hist_to_csv(numpy_hist: tuple, file_name: str):
     output_file.close()
 
 # reading numpy histogram from csv - I need to do this but from a database - that database
-# could contain the pasted in csv values
+# should contain the pasted in csv values
 
 
 def hist_from_csv(file_name: str):
