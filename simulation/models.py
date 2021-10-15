@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 import numpy
 import numpy_hist_io
 import csv
@@ -12,9 +13,15 @@ class ArrivalProbabilities(models.Model):
     hist = (numpy.array(binEntry), numpy.array(binEdge))
 
 
+class BackgroundProfiles(models.Model):
+    BackgroundId = models.IntegerField(primary_key=True)
+    BackgroundName = models.CharField(max_length=100)
+
+
 class BackgroundPowers(models.Model):
     BackgroundPowerId = models.IntegerField(primary_key=True)
-    BackgroundId = models.IntegerField(foreignKey=True)
+    BackgroundId = models.ForeignKey(
+        BackgroundProfiles, default=None, on_delete=CASCADE)
     Time = models.FloatField(null=False)
     Power = models.FloatField(null=False)
 
