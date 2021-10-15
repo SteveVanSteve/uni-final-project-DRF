@@ -12,13 +12,14 @@ class ArrivalProbabilities(models.Model):
     hist = (numpy.array(binEntry), numpy.array(binEdge))
 
 
-class BackgroundProfiles(models.Model):
-    BackgroundId = models.IntegerField(primary_key=True)
-    BackgroundName = models.CharField(max_length=200)
-
-
-class BackgroundPower(models.Model):
+class BackgroundPowers(models.Model):
     BackgroundPowerId = models.IntegerField(primary_key=True)
-    BackgroundId = models.ForeignKey
+    BackgroundId = models.IntegerField(foreignKey=True)
+    Time = models.FloatField(null=False)
+    Power = models.FloatField(null=False)
+
+
+class ChargingPowers(models.Model):
+    Id = models.IntegerField(primary_key=True)
     Time = models.FloatField(null=False)
     Power = models.FloatField(null=False)
