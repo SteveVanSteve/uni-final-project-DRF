@@ -17,8 +17,6 @@ class ArrivalProbabilities(models.Model):
     for i in range(6):
         bin_edges.append(offset+i)
 
-# Add some entries.
-# Update these are percentages for probability times - in preparation for the charging times
     n_bins = len(bin_edges)-1
     bin_entries = [0.]*n_bins
     bin_entries[0] = 10  # 4.30 to 5.30pm
@@ -92,12 +90,12 @@ def hist_to_csv(numpy_hist: tuple, file_name: str):
 # should contain the pasted in csv values
 
 
-def hist_from_csv(file_name: str):
+def hist_from_csv(ChargingProfiles: str):
     """ 
     A function to read a numpy histogram from a CSV file.
     """
-    input_file = open(file_name, 'r', newline='')
-    csv_reader = csv.reader(input_file)
+    input_file = open("C:/ChargingProfiles.csv", 'r', newline='')
+    csv_reader = csv.reader(ChargingProfiles)
     bin_entries = []
     bin_edges = []
     for row in csv_reader:
@@ -116,5 +114,5 @@ def hist_from_csv(file_name: str):
         except ValueError:
             pass
 
-    input_file.close()
+    ChargingProfiles.close()
     return (numpy.array(bin_entries), numpy.array(bin_edges))
