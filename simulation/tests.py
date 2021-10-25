@@ -1,3 +1,11 @@
+# Test Arrival Probabilities
+# By Steve Shields
+
 from django.test import TestCase
 
-# Create your tests here.
+from simulation.models import ArrivalProbabilities
+
+
+class ArrivalProbabilitiesTestCase(TestCase):
+    def setUp(self):
+        ArrivalProbabilities.objects.create()

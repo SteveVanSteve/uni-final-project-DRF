@@ -94,7 +94,7 @@ def hist_from_csv(ChargingProfiles: str):
     """ 
     A function to read a numpy histogram from a CSV file.
     """
-    input_file = open("C:/ChargingProfiles.csv", 'r', newline='')
+    ChargingProfiles = open("C:/ChargingProfiles.csv", 'r', newline='')
     csv_reader = csv.reader(ChargingProfiles)
     bin_entries = []
     bin_edges = []
