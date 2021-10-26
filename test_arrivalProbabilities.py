@@ -5,7 +5,7 @@ from django.test import TestCase
 from simulation.models import ArrivalProbabilities
 
 
-class TestArrivalProbabilities(unittest.TestCase):
+class TestArrivalProbabilities(TestCase):
     def setUp(self):
         pass  # Remove and replace with contents of function
         # Setup Django
