@@ -1,5 +1,6 @@
 # Test Arrival Probabilities
 # By Steve Shields
+
 import numpy
 from django.db.models import query
 from django.test import TestCase
@@ -27,6 +28,7 @@ class TestArrivalProbabilities(TestCase):
                 bin_entries.append(query_set[i].binEntry)
             bin_edges.append(query_set[i].binEdge)
         print(bin_entries, bin_edges)
+
         hist = (numpy.array(bin_entries), numpy.array(bin_edges))
 
         # Remove and replace with contents of function
