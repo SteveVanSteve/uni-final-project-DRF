@@ -1,6 +1,8 @@
 # Test Arrival Probabilities
 # By Steve Shields
 
+from django.test import Client
+from django.db import connection
 import numpy
 from django.db.models import query
 from django.test import TestCase
@@ -9,7 +11,7 @@ from simulation.models import ArrivalProbabilities
 
 class TestArrivalProbabilities(TestCase):
     def test_get_queryset(self):
-        print("hello")
+        print("Hello there! Let's get connected and test some data!")
         i = 1
         self.assertEqual(i, 1)
         l = [3, 4]
