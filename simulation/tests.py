@@ -15,7 +15,7 @@ class TestArrivalProbabilities(TestCase):
         self.assertIn(4, l)
 
     def test_get_queyset(self):
-        query_set = ArrivalProbabilities.objects.all()
+        query_set = ArrivalProbabilities.objects.all().values_list()
         print(query_set)
         n = len(query_set)
         print(n)
