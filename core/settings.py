@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'simulation',
     'simulation_api',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
