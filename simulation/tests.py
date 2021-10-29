@@ -1,9 +1,5 @@
 # Test Arrival Probabilities
 # By Steve Shields
-
-from django.test import Client
-from django.db import connection
-from django.db import models
 import numpy
 from django.db.models import query
 from django.test import TestCase
