@@ -4,5 +4,6 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', include('simulation.urls')),
+    path('', include('simulation.urls', namespace='simulation')),
+    path('api/', include('simulation_api.urls', namespace='simulation_api')),
 ]
