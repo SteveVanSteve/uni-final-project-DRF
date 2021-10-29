@@ -12,7 +12,7 @@ from simulation.models import ArrivalProbabilities
 
 class TestArrivalProbabilities(TestCase):
     def test_get_queryset(self):
-        print("Hello there! Let's read some data and make a graph!")
+        print("Ok! Let's read some data and make a graph!")
         i = 1
         self.assertEqual(i, 1)
         l = [3, 4]
