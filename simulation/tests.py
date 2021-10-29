@@ -3,6 +3,7 @@
 
 from django.test import Client
 from django.db import connection
+from django.db import models
 import numpy
 from django.db.models import query
 from django.test import TestCase
@@ -11,13 +12,13 @@ from simulation.models import ArrivalProbabilities
 
 class TestArrivalProbabilities(TestCase):
     def test_get_queryset(self):
-        print("Hello there! Let's get connected and test some data!")
+        print("Hello there! Let's read some data and make a graph!")
         i = 1
         self.assertEqual(i, 1)
         l = [3, 4]
         self.assertIn(4, l)
 
-    def test_test(self):
+    def test_get_queyset(self):
         query_set = ArrivalProbabilities.objects.all()
         print(query_set)
         n = len(query_set)
@@ -32,15 +33,3 @@ class TestArrivalProbabilities(TestCase):
         print(bin_entries, bin_edges)
 
         hist = (numpy.array(bin_entries), numpy.array(bin_edges))
-
-        # Remove and replace with contents of function
-
-        # Setup Django
-
-#     def test_arrival_probability(self):
-#         # Read models from database
-#         # Check number of models read
-#         # Check one of the models against expected values
-#         self.assertEqual(1, 1)  # Remove this line when function is finished
-
-# unittest.main()
