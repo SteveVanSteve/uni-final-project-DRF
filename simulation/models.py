@@ -12,8 +12,8 @@ class ArrivalProbabilities(models.Model):
     binEdge = models.FloatField(null=False)
     # hist = (numpy.array(binEntry), numpy.array(binEdge))
 
-    # def __float__(self):
-    #     return self.arrivalprobabilities_float
+    def __int__(self):
+        return self.arrivalProbId
 
 
 # class ChargingCurve(models.Model):
