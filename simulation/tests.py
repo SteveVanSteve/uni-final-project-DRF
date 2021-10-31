@@ -1,15 +1,14 @@
 # Test Arrival Probabilities
 # By Steve Shields
+
 import numpy
-import mysql.connector
-from django.db.models import query
 from django.test import TestCase
 from simulation.models import ArrivalProbabilities
 
 
 class TestArrivalProbabilities(TestCase):
     def test_get_queryset_test(self):
-        print("Hello Steve! Connect to the database to see the data!")
+        print("Hello Steve!")
         i = 1
         self.assertEqual(i, 1)
         l = [3, 4]

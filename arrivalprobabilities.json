@@ -1,0 +1,26 @@
+[
+    {
+        "bin entries":  "10",
+        "bin edges":  "4.5"
+    },
+    {
+        "bin entries":  "27",
+        "bin edges":  "5.5"
+    },
+    {
+        "bin entries":  "36",
+        "bin edges":  "6.5"
+    },
+    {
+        "bin entries":  "22",
+        "bin edges":  "7.5"
+    },
+    {
+        "bin entries":  "5",
+        "bin edges":  "8.5"
+    },
+    {
+        "bin entries":  "",
+        "bin edges":  "9.5"
+    }
+]
