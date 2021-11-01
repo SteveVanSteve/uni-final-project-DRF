@@ -1,9 +1,7 @@
-# Test Arrival Probabilities
-# By Steve Shields
-
 import numpy
 from django.test import TestCase
-from simulation.models import ArrivalProbabilities
+from django.contrib.auth.models import User
+from simulation.models import *
 
 
 class TestArrivalProbabilities(TestCase):
