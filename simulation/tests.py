@@ -1,13 +1,21 @@
 from simulation.models import ArrivalProbabilities
 import numpy
+import time
 from django.test import TestCase
 from django.contrib.auth.models import User
 from simulation.models import *
 
 
 class TestArrivalProbabilities(TestCase):
+    def test_get_queryset_sanity_check(self):
+        print("Hello Steve!")
+        i = 1
+        self.assertEqual(i, 1)
+        l = [3, 4]
+        self.assertIn(4, l)
+
     def setUp(self):
-        print("Setting up test data")
+        print("Set up Arrival Probability test data")
         ArrivalProbabilities.objects.create(
             arrivalProbId=1, binEntry=10, binEdge=4.5)
         ArrivalProbabilities.objects.create(
@@ -37,18 +45,69 @@ class TestArrivalProbabilities(TestCase):
 
         hist = (numpy.array(bin_entries), numpy.array(bin_edges))
 
-    def test_get_queryset_sanity_check(self):
-        print("Hello Steve!")
-        i = 1
-        self.assertEqual(i, 1)
-        l = [3, 4]
-        self.assertIn(4, l)
-
 
 class TestChargingCurve(TestCase):
-    def test_charging_curve(self):
-        print("")
-        i = 2
-        self.assertEqual(i, 2)
-        l = [5, 6]
-        self.assertIn(6, l)
+    def setUp(self):
+        print("Get and check the Charging Curve data")
+        ChargingCurve.objects.create(
+            chargingCurveId=1, Time=00.00, Power=81.3008)
+        ChargingCurve.objects.create(
+            chargingCurveId=2, Time=00.10, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=3, Time=00.30, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=4, Time=00.35, Power=8658.54)
+        ChargingCurve.objects.create(
+            chargingCurveId=5, Time=00.40, Power=10772.4)
+        ChargingCurve.objects.create(
+            chargingCurveId=6, Time=00.45, Power=11016.3)
+        ChargingCurve.objects.create(
+            chargingCurveId=7, Time=1.00, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=8, Time=1.05, Power=6707.32)
+        ChargingCurve.objects.create(
+            chargingCurveId=9, Time=1.10, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=10, Time=1.30, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=11, Time=1.35, Power=9308.94)
+        ChargingCurve.objects.create(
+            chargingCurveId=12, Time=1.45, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=13, Time=2.00, Power=10853.7)
+        ChargingCurve.objects.create(
+            chargingCurveId=14, Time=2.05, Power=8333.33)
+        ChargingCurve.objects.create(
+            chargingCurveId=15, Time=2.10, Power=10935)
+        ChargingCurve.objects.create(
+            chargingCurveId=16, Time=2.30, Power=10975.6)
+        ChargingCurve.objects.create(
+            chargingCurveId=17, Time=2.35, Power=5934.96)
+        ChargingCurve.objects.create(
+            chargingCurveId=18, Time=2.40, Power=4471.54)
+        ChargingCurve.objects.create(
+            chargingCurveId=19, Time=2.45, Power=3739.84)
+        ChargingCurve.objects.create(
+            chargingCurveId=20, Time=2.50, Power=1910.57)
+        ChargingCurve.objects.create(
+            chargingCurveId=21, Time=2.55, Power=1300.81)
+        ChargingCurve.objects.create(
+            chargingCurveId=22, Time=3.01, Power=162.602)
+
+    def test_get_queryset_charging_curve(self):
+        query_set = ChargingCurve.objects.all()
+        print(query_set)
+        n = len(query_set)
+        print(n)
+        Time = []
+        Power = []
+        for i in range(n):
+            print(query_set[i])
+            print(Time, Power)
+
+
+# class TestBackgrounds(TestCase):
+#     def setUp(self):
+#         print("Getting and checking the backgrounds data")
+#         Backgrounds.objects.create(
+#             Id=4, BackgroundSetId=1,Time=00.00, Power=256.667)
