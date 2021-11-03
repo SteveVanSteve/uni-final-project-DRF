@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'simulation',
-    'simulation_api',
     'rest_framework',
     'background_task',
     'debug_toolbar',

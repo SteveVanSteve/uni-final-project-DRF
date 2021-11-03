@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
-from django.views.generic import TemplateView
+from .views import ArrivalProbabilitiesList, ArrivalProbabilitiesDetail
 
 app_name = 'simulation'
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="simulation/index.html")),
+    path('<int:pk>/', ArrivalProbabilitiesDetail.as_view(), name='detailcreate'),
+    path('', ArrivalProbabilitiesList.as_view(), name='listcreate'),
 ]

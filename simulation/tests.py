@@ -33,6 +33,7 @@ class TestArrivalProbabilities(TestCase):
         query_set = ArrivalProbabilities.objects.all()
         print(query_set)
         n = len(query_set)
+        self.assertEqual(n, 6)
         print(n)  # Print each row
         bin_entries = []
         bin_edges = []
@@ -44,6 +45,7 @@ class TestArrivalProbabilities(TestCase):
         print(bin_entries, bin_edges)
 
         hist = (numpy.array(bin_entries), numpy.array(bin_edges))
+        print(hist)
 
 
 class TestChargingCurve(TestCase):
@@ -98,16 +100,30 @@ class TestChargingCurve(TestCase):
         query_set = ChargingCurve.objects.all()
         print(query_set)
         n = len(query_set)
+        self.assertEqual(n, 22)
         print(n)
-        Time = []
-        Power = []
+        times = []
+        powers = []
         for i in range(n):
             print(query_set[i])
-            print(Time, Power)
-
+            times.append(query_set[i].Time)
+            powers.append(query_set[i].Power)
+        print(times, powers)
 
 # class TestBackgrounds(TestCase):
 #     def setUp(self):
 #         print("Getting and checking the backgrounds data")
 #         Backgrounds.objects.create(
-#             Id=4, BackgroundSetId=1,Time=00.00, Power=256.667)
+#             Id=4, BackgroundSetId=1, Time=00.00, Power=256.667)
+#         # add rest of backgrounds data
+
+#     def test_get_queryset_charging_curve(self):
+#         query_set = Backgrounds.objects.all()
+#         print(query_set)
+#         n = len(query_set)
+#         print(n)
+#         Time = []
+#         Power = []
+#         for i in range(n):
+#             print(query_set[i])
+#             print(Time, Power)
