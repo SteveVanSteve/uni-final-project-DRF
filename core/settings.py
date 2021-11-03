@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'simulation',
+    'simulation.apps.SimulationConfig',
     'rest_framework',
     'background_task',
     'debug_toolbar',
