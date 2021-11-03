@@ -110,14 +110,15 @@ class TestChargingCurve(TestCase):
             powers.append(query_set[i].Power)
         print(times, powers)
 
-# class TestBackgrounds(TestCase):
-#     def setUp(self):
-#         print("Getting and checking the backgrounds data")
-#         Backgrounds.objects.create(
-#             Id=4, BackgroundSetId=1, Time=00.00, Power=256.667)
-#         # add rest of backgrounds data
 
-#     def test_get_queryset_charging_curve(self):
+class TestBackgrounds(TestCase):
+    def setUp(self):
+        print("Getting and checking the backgrounds data")
+        Backgrounds.objects.create(
+            Id=4, BackgroundSetId=1, Time=00.00, Power=256.667)
+        # add rest of backgrounds data
+
+#     def test_get_queryset_backgrounds(self):
 #         query_set = Backgrounds.objects.all()
 #         print(query_set)
 #         n = len(query_set)

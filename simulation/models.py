@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 from django.db.models.fields import IntegerField
 import numpy
 
@@ -22,8 +23,14 @@ class ChargingCurve(models.Model):
         ordering = ['chargingCurveId']
 
 
-# class Backgrounds(models.Model):
-#     Id = models.IntegerField(primary_key=True)
-#     BackgroundSetId = models.ForeignKey(IntegerField, null=False)
-#     Time = models.FloatField(null=False)
-#     Power = models.FloatField(null=False)
+class BackgroundSets(models.Model):
+    Id = models.IntegerField(primary_key=True)
+    Name = models.CharField(max_length=100)
+
+
+class Backgrounds(models.Model):
+    Id = models.IntegerField(primary_key=True)
+    BackgroundSetId = models.ForeignKey(
+        BackgroundSets, on_delete=CASCADE)
+    Time = models.FloatField(null=False)
+    Power = models.FloatField(null=False)
