@@ -9,11 +9,17 @@ class ArrivalProbabilities(models.Model):
     binEdge = models.FloatField(null=False)
     hist = (numpy.array(binEntry), numpy.array(binEdge))
 
+    class Meta:
+        ordering = ['arrivalProbId']
+
 
 class ChargingCurve(models.Model):
     chargingCurveId = models.IntegerField(primary_key=True)
     Time = models.FloatField(null=False)
     Power = models.FloatField(null=False)
+
+    class Meta:
+        ordering = ['chargingCurveId']
 
 
 # class Backgrounds(models.Model):
