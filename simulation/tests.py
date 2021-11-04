@@ -1,4 +1,4 @@
-from simulation.models import ArrivalProbabilities
+from simulation.models import ArrivalProbabilities, ChargingCurve, BackgroundSets, Backgrounds
 import numpy
 import time
 from django.test import TestCase
@@ -111,20 +111,48 @@ class TestChargingCurve(TestCase):
         print(times, powers)
 
 
+class TestBackgroundSets(TestCase):
+    def setUp(self):
+        print("Getting and checking the Background Sets data")
+        BackgroundSets.objects.create(Id=1, Name="No Electric Heating")
+        BackgroundSets.objects.create(Id=2, Name="Additional Electric Heating")
+        BackgroundSets.objects.create(Id=3, Name="Primary Electric Heating")
+
+    def test_get_queryset_background_sets(self):
+        query_set = BackgroundSets.objects.all()
+        print(query_set)
+        n = len(query_set)
+        self.assertEqual(n, 3)
+        print(n)
+        background_set_id = []
+        background_set_name = []
+        for i in range(n):
+            print(query_set[i])
+            background_set_id.append(query_set[i].Id)
+            background_set_name.append(query_set[i].Name)
+        print(background_set_id, background_set_name)
+
+
 class TestBackgrounds(TestCase):
     def setUp(self):
         print("Getting and checking the backgrounds data")
         Backgrounds.objects.create(
             Id=4, BackgroundSetId=1, Time=00.00, Power=256.667)
-        # add rest of backgrounds data
 
-#     def test_get_queryset_backgrounds(self):
-#         query_set = Backgrounds.objects.all()
-#         print(query_set)
-#         n = len(query_set)
-#         print(n)
-#         Time = []
-#         Power = []
-#         for i in range(n):
-#             print(query_set[i])
-#             print(Time, Power)
+    def test_get_queryset_backgrounds(self):
+        query_set = Backgrounds.objects.all()
+        print(query_set)
+        n = len(query_set)
+        self.assertEqual(n, 1)
+        print(n)
+        backgrounds_id = []
+        background_set_id = []
+        times = []
+        powers = []
+        for i in range(n):
+            print(query_set[i])
+            backgrounds_id.append(query_set[i].Id)
+            background_set_id.append(query_set[i].BackgroundSetId)
+            times.append(query_set[i].Time)
+            powers.append(query_set[i].Power)
+            print(backgrounds_id, background_set_id, times, powers)

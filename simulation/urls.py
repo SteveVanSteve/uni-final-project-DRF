@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import ArrivalProbabilitiesList, ArrivalProbabilitiesDetail
+from simulation import views
 
 app_name = 'simulation'
 
+
 urlpatterns = [
-    path('<int:pk>/', ArrivalProbabilitiesDetail.as_view(), name='detailcreate'),
-    path('', ArrivalProbabilitiesList.as_view(), name='listcreate'),
+    path('simulation/', views.ArrivalProbabilities_list),
+    path('simulation/<int:pk>/', views.ArrivalProbabilities_detail),
 ]

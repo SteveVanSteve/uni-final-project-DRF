@@ -6,6 +6,6 @@ from simulation.models import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('simulation.urls', namespace='simulation')),
+    path('', include('simulation.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ]
