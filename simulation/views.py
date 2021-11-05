@@ -1,53 +1,25 @@
 from django.http.response import Http404
 from django.shortcuts import render
+from django.views import generic
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from simulation.models import ArrivalProbabilities
 from simulation.serializers import ArrivalProbabilitiesSerializer
 from rest_framework.views import APIView
+from rest_framework import mixins
+from rest_framework import generics
 
 
-class ArrivalProbabilitiesList(APIView):
-    def get(self, request, format=None):
-        simulation = ArrivalProbabilities.objects.all()
-        serializer = ArrivalProbabilitiesSerializer(simulation, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = ArrivalProbabilitiesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ArrivalProbabilitiesList(generics.ListCreateAPIView):
+    queryset = ArrivalProbabilities.objects.all()
+    serializer_class = ArrivalProbabilitiesSerializer
 
 
-class ArrivalProbabilitiesDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return ArrivalProbabilities.objects.get(pk=pk)
-        except ArrivalProbabilities.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        simulation = self.get_object(pk)
-        serializer = ArrivalProbabilitiesSerializer(simulation)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        simulation = self.get_object(pk)
-        serializer = ArrivalProbabilitiesSerializer(
-            simulation, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        ArrivalProbabilities = self.get_object(pk)
-        ArrivalProbabilities.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+class ArrivalProbabilitiesDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ArrivalProbabilities.objects.all()
+    serializer_class = ArrivalProbabilitiesSerializer
 
 # from rest_framework import status
 # from rest_framework.decorators import api_view
