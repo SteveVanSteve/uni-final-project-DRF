@@ -7,23 +7,13 @@ class ArrivalProbabilitiesSerializer(serializers.ModelSerializer):
         model = ArrivalProbabilities
         fields = ['arrivalProbId', 'binEntry', 'binEdge']
 
+    def create(self, validated_data):
+        return ArrivalProbabilities.objects.create(**validated_data)
 
-class BackgroundSetsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BackgroundSets
-        fields = ['No Electric Heating',
-                  'Additional Electric Heating', 'Primary Electric Heating']
-
-
-class BackgroundsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Backgrounds
-        fields = ['Id', 'BackgroundSetId', 'Time', 'Power']
-
-
-class ChargingCurveSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ChargingCurve
-        fields = ['chargingCurveId', 'Times', 'Powers']
+    def update(self, instance, validated_data):
+        instance.arrivalProbId = validated_data.get(
+            'arrivalProbId', instance.arrivalProbId)
+        instance.binEntry = validated_data.get('binEntry', instance.binEntry)
+        instance.binEdge = validated_data.get('binEdge', instance.binEdge)
+        instance.save()
+        return instance
