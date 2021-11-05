@@ -1,12 +1,12 @@
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from simulation.models import ArrivalProbabilities
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from simulation.models import *
 from simulation.serializers import ArrivalProbabilitiesSerializer
 
 
-@csrf_exempt
-def ArrivalProbabilities_list(request):
+@api_view(['GET', 'POST'])
+def ArrivalProbabilities_list(request, format=None):
     """
     List all Arrival Probabilities, or create a new Arrival Probability.
     """
@@ -14,70 +14,38 @@ def ArrivalProbabilities_list(request):
         Arrival_Probabilities = ArrivalProbabilities.objects.all()
         serializer = ArrivalProbabilitiesSerializer(
             Arrival_Probabilities, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ArrivalProbabilitiesSerializer(data=data)
+        serializer = ArrivalProbabilitiesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
-def ArrivalProbabilities_detail(request, pk):
+@api_view(['GET', 'PUT', 'DELETE'])
+def ArrivalProbabilities_detail(request, pk, format=None):
     """
     Retrieve, update or delete an Arrival Probability.
     """
     try:
         Arrival_Probabilities = ArrivalProbabilities.objects.get(pk=pk)
     except ArrivalProbabilities.DoesNotExist:
-        return HttpResponse(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = ArrivalProbabilitiesSerializer(Arrival_Probabilities)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
         serializer = ArrivalProbabilitiesSerializer(
-            Arrival_Probabilities, data=data)
-
+            Arrival_Probabilities, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data)
-            return JsonResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         ArrivalProbabilities.delete()
-        return HttpResponse(status=204)
-
-
-# class ArrivalProbabilitiesViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows the Arrival Probabilities to be viewed or edited.
-#     """
-#     queryset = ArrivalProbabilities.objects.all().order_by('arrivalProbId')
-#     serializer_class = ArrivalProbabilitiesSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-
-# class ArrivalProbabilitiesList(generics.ListCreateAPIView):
-#     queryset = ArrivalProbabilities.objects.all()
-#     serializer_class = ArrivalProbabilitiesSerializer
-#     pass
-
-
-# class ArrivalProbabilitiesDetail(generics.RetrieveDestroyAPIView):
-#     queryset = ArrivalProbabilities.objects.all()
-#     serializer_class = ArrivalProbabilitiesSerializer
-#     pass
-
-# class ChargingCurveViewSet(viewsets.ModelViewSet):
-#     """
-#     API endpoint that allows the Charging Curve to be viewed or edited.
-#     """
-#     queryset = ChargingCurve.objects.all()
-#     serializer_class = ChargingCurveSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+        return Response(status=status.HTTP_204_NO_CONTENT)
