@@ -1,5 +1,16 @@
 from rest_framework import serializers
-from simulation.models import *
+from simulation.models import ArrivalProbabilities
+from django.contrib.auth.models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    simulation = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=ArrivalProbabilities.objects.all())
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'simulation', 'owner']
 
 
 class ArrivalProbabilitiesSerializer(serializers.ModelSerializer):
