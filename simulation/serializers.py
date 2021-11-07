@@ -3,9 +3,9 @@ from simulation.models import ArrivalProbabilities
 from django.contrib.auth.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
-    simulation = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ArrivalProbabilities.objects.all())
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    simulation = serializers.HyperlinkedRelatedField(
+        many=True, view_name='arrivalprobabilities-detail', read_only=True)
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
@@ -13,10 +13,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'simulation', 'owner']
 
 
-class ArrivalProbabilitiesSerializer(serializers.ModelSerializer):
+class ArrivalProbabilitiesSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = ArrivalProbabilities
-        fields = ['arrivalProbId', 'binEntry', 'binEdge']
+        fields = ['url', 'owner', 'arrivalProbId', 'binEntry', 'binEdge']
 
     def create(self, validated_data):
         return ArrivalProbabilities.objects.create(**validated_data)
