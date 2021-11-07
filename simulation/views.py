@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from simulation.models import ArrivalProbabilities
-from simulation.serializers import ArrivalProbabilitiesSerializer, UserSerializer
+from simulation.permissions import IsOwnerOrReadOnly
+from simulation.serializers import ArrivalProbabilitiesSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from django.http import Http404
@@ -10,6 +11,7 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from simulation.serializers import UserSerializer
 from rest_framework import permissions
+from simulation.permissions import IsOwnerOrReadOnly
 
 
 class UserList(generics.ListAPIView):
@@ -34,7 +36,8 @@ class ArrivalProbabilitiesList(generics.ListCreateAPIView):
 class ArrivalProbabilitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ArrivalProbabilities.objects.all()
     serializer_class = ArrivalProbabilitiesSerializer
-    permissions_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 # still having issues regarding permissions and owners
