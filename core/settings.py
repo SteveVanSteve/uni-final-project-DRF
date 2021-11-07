@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'simulation.apps.SimulationConfig',
     'rest_framework',
+    'drf_multiple_model',
     'background_task',
     'debug_toolbar',
 ]

@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from drf_multiple_model.views import ObjectMultipleModelAPIView
 from rest_framework.response import Response
-from simulation.models import ArrivalProbabilities
+from simulation.models import ArrivalProbabilities, ChargingCurve
 from simulation.permissions import IsOwnerOrReadOnly
-from simulation.serializers import ArrivalProbabilitiesSerializer
+from simulation.serializers import ArrivalProbabilitiesSerializer, ChargingCurveSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from django.http import Http404
@@ -20,7 +21,8 @@ from rest_framework.reverse import reverse
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'simulation': reverse('arrivalprobabilities-list', request=request, format=format)
+        'simulation': reverse('arrivalprobabilities-list', request=request, format=format),
+        'simulation': reverse('chargingcurve-list', request=request, format=format)
     })
 
 
@@ -50,4 +52,17 @@ class ArrivalProbabilitiesDetail(generics.RetrieveUpdateDestroyAPIView):
         permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
-# still having issues regarding permissions and owners
+class ChargingCurveList(generics.ListCreateAPIView):
+    queryset = ChargingCurve.objects.all()
+    serializer_class = ChargingCurveSerializer
+    permissions_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ChargingCurveDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ChargingCurve.objects.all()
+    serializer_class = ChargingCurveSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]

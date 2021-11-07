@@ -15,6 +15,15 @@ class ArrivalProbabilities(models.Model):
         ordering = ['arrivalProbId']
 
 
+class ChargingCurve(models.Model):
+    chargingCurveId = models.IntegerField(primary_key=True)
+    Time = models.FloatField(null=False)
+    Power = models.FloatField(null=False)
+
+    class Meta:
+        ordering = ['chargingCurveId']
+
+
 # class BackgroundSets(models.Model):
 #     Id = models.IntegerField(primary_key=True)
 #     Name = models.CharField(max_length=100, blank=True, null=True)
@@ -32,12 +41,3 @@ class ArrivalProbabilities(models.Model):
 
 #     class Meta:
 #         ordering = ['Id']
-
-
-# class ChargingCurve(models.Model):
-#     chargingCurveId = models.IntegerField(primary_key=True)
-#     Time = models.FloatField(null=False)
-#     Power = models.FloatField(null=False)
-
-#     class Meta:
-#         ordering = ['chargingCurveId']

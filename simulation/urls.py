@@ -8,6 +8,10 @@ urlpatterns = format_suffix_patterns([
          name='arrivalprobabilities-list'),
     path('simulation/<int:pk>/', views.ArrivalProbabilitiesDetail.as_view(),
          name='arrivalprobabilities-detail'),
+    path('simulation/', views.ChargingCurveList.as_view(),
+         name='chargingcurve-list'),
+    path('simulation/<int:pk>/', views.ChargingCurveDetail.as_view(),
+         name='chargingcurve-detail'),
     path('users/', views.UserList.as_view(), name='user-list'),
     path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail')
 ])
