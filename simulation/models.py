@@ -1,5 +1,9 @@
 from django.db import models
+from django.db.models.deletion import PROTECT
 from django.db.models.fields import IntegerField
+import numpy
+
+from django.db import models
 import numpy
 
 
@@ -8,17 +12,21 @@ class ArrivalProbabilities(models.Model):
     binEntry = models.FloatField(null=True)
     binEdge = models.FloatField(null=False)
     hist = (numpy.array(binEntry), numpy.array(binEdge))
-    owner = models.ForeignKey(
-        'auth.user', related_name='simulation', on_delete=models.PROTECT)
 
-    class Meta:
-        ordering = ['arrivalProbId']
+
+class BackgroundSet(models.Model):
+    backgroundSetId = models.IntegerField(primary_key=True)
+    backgroundSetName = models.CharField(max_length=50)
+
+
+class BackgroundPower(models.Model):
+    backgroundPowerId = models.IntegerField(primary_key=True)
+    backgroundSetId = models.ForeignKey(BackgroundSet, on_delete=PROTECT)
+    time = models.FloatField(null=False, default=None)
+    power = models.FloatField(null=False, default=None)
 
 
 class ChargingCurve(models.Model):
     chargingCurveId = models.IntegerField(primary_key=True)
-    Time = models.FloatField(null=False)
-    Power = models.FloatField(null=False)
-
-    class Meta:
-        ordering = ['chargingCurveId']
+    time = models.FloatField(null=False, default=None)
+    power = models.FloatField(null=False, default=None)
