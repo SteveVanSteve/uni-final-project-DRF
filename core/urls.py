@@ -1,14 +1,28 @@
 from django.contrib import admin
-from django.urls import path, include
-import debug_toolbar
+from django.urls import include, path
+from rest_framework import routers
+from simulation import views
 
+router = routers.DefaultRouter()
+router.register(r'arrivalprobabilities', views.ArrivalProbabilitiesViewSet)
+router.register(r'backgroundsets', views.BackgroundSetViewSet)
+router.register(r'backgroundpower', views.BackgroundPowerViewSet)
+router.register(r'chargingcurve', views.ChargingCurveViewSet)
 
+# Wire up our API using automatic URL routing.
+# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('simulation.urls')),
-    path('__debug__/', include(debug_toolbar.urls)),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
-urlpatterns += [
-    path('api-auth/', include('rest_framework.urls'))
-]
+# from django.contrib import admin
+# from django.urls import path, include
+
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('api-auth/', include('rest_framework.urls')),
+#     path('simulation/', include('simulation.urls')),
+# ]

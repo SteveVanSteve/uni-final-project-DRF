@@ -30,3 +30,8 @@ class ChargingCurve(models.Model):
     chargingCurveId = models.IntegerField(primary_key=True)
     time = models.FloatField(null=False, default=None)
     power = models.FloatField(null=False, default=None)
+
+# class SimulationConfig(models.Model):
+#   houseId = models.IntegerField
+#   numberOfCars = models.IntegerField(null=False)
+#   backgroundSetId = models.ForeignKey(BackgroundSet, on_delete=PROTECT)
