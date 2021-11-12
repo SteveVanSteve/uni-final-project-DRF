@@ -8,21 +8,14 @@ router.register(r'arrivalprobabilities', views.ArrivalProbabilitiesViewSet)
 router.register(r'backgroundsets', views.BackgroundSetViewSet)
 router.register(r'backgroundpower', views.BackgroundPowerViewSet)
 router.register(r'chargingcurve', views.ChargingCurveViewSet)
+router.register(r'simulationconfig', views.SimulationConfigViewSet)
+router.register(r'simulationresult', views.SimulationResultViewSet)
+
 
 # Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
-
-# from django.contrib import admin
-# from django.urls import path, include
-
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api-auth/', include('rest_framework.urls')),
-#     path('simulation/', include('simulation.urls')),
-# ]

@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from simulation.models import ArrivalProbabilities, ChargingCurve, BackgroundSet, BackgroundPower
+from simulation.models import ArrivalProbabilities, ChargingCurve, BackgroundSet, BackgroundPower, SimulationConfig, SimulationResult
 
-# insert SimulationConfig as a serializer model
+# insert SimulationConfig and SimulationResult classes as serializer models
+# and get them to hook up to the API
 
 
 class ArrivalProbabilitiesSerializer(serializers.HyperlinkedModelSerializer):
@@ -70,6 +71,39 @@ class ChargingCurveSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance.chargingCurveId = validated_data.get(
             'chargingCurveId', instance.chargingCurveId)
+        instance.time = validated_data.get('time', instance.time)
+        instance.power = validated_data.get('power', instance.power)
+        instance.save()
+        return instance
+
+
+class SimulationConfigSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = SimulationConfig
+        fields = ['houseId', 'numberOfCars', 'backgroundSetId']
+
+    def create(self, validated_data):
+        return SimulationConfig.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.houseId = validated_data.get('houseId', instance.houseId)
+        instance.numberOfCars = validated_data.get(
+            'numberOfCars', instance.numberOfCars)
+        instance.backgroundSetId = validated_data.get(
+            'backgroundSetId', instance.backgroundSetId)
+        instance.save()
+        return instance
+
+
+class SimulationResultSerializer(serializers.Serializer):
+    class Meta:
+        model = SimulationResult
+        fields = ['time', 'power']
+
+    def create(self, validated_data):
+        return SimulationResult.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
         instance.time = validated_data.get('time', instance.time)
         instance.power = validated_data.get('power', instance.power)
         instance.save()

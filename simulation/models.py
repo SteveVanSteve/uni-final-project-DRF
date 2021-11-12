@@ -31,7 +31,13 @@ class ChargingCurve(models.Model):
     time = models.FloatField(null=False, default=None)
     power = models.FloatField(null=False, default=None)
 
-# class SimulationConfig(models.Model):
-#   houseId = models.IntegerField
-#   numberOfCars = models.IntegerField(null=False)
-#   backgroundSetId = models.ForeignKey(BackgroundSet, on_delete=PROTECT)
+
+class SimulationConfig(models.Model):
+    houseId = models.IntegerField(null=False)
+    numberOfCars = models.IntegerField(null=False)
+    backgroundSetId = models.ForeignKey(BackgroundSet, on_delete=PROTECT)
+
+
+class SimulationResult(models.Model):
+    time = models.FloatField(null=False, default=None)
+    power = models.FloatField(null=False, default=None)
