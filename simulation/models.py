@@ -13,10 +13,16 @@ class ArrivalProbabilities(models.Model):
     binEdge = models.FloatField(null=False)
     hist = (numpy.array(binEntry), numpy.array(binEdge))
 
+    def __str__(self):
+        return "{}-{}".format(self.arrivalProbId, self.binEntry, self.binEdge)
+
 
 class BackgroundSet(models.Model):
     backgroundSetId = models.IntegerField(primary_key=True)
     backgroundSetName = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "{}-{}".format(self.backgroundSetId, self.backgroundSetName)
 
 
 class BackgroundPower(models.Model):
@@ -25,11 +31,17 @@ class BackgroundPower(models.Model):
     time = models.FloatField(null=False, default=None)
     power = models.FloatField(null=False, default=None)
 
+    def __str__(self):
+        return "{}-{}".format(self.backgroundPowerId, self.backgroundSetId, self.time, self.power)
+
 
 class ChargingCurve(models.Model):
     chargingCurveId = models.IntegerField(primary_key=True)
     time = models.FloatField(null=False, default=None)
     power = models.FloatField(null=False, default=None)
+
+    def __str__(self):
+        return "{}-{}".format(self.chargingCurveId, self.time, self.power)
 
 
 class SimulationConfig(models.Model):
@@ -37,7 +49,13 @@ class SimulationConfig(models.Model):
     numberOfCars = models.IntegerField(null=False)
     backgroundSetId = models.ForeignKey(BackgroundSet, on_delete=PROTECT)
 
+    def __str__(self):
+        return "{}-{}".format(self.houseId, self.numberOfCars, self.backgroundSetId)
+
 
 class SimulationResult(models.Model):
     time = models.FloatField(null=False, default=None)
     power = models.FloatField(null=False, default=None)
+
+    def __str__(self):
+        return "{}-{}".format(self.time, self.power)

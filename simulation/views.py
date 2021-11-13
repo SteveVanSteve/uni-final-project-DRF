@@ -2,7 +2,7 @@ from django.shortcuts import render
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 from rest_framework import views
 from rest_framework.response import Response
-import simulation
+from django.views.generic import TemplateView
 from .models import ArrivalProbabilities, BackgroundSet, BackgroundPower, ChargingCurve, SimulationConfig, SimulationResult
 from simulation.permissions import IsOwnerOrReadOnly
 from .serializers import ArrivalProbabilitiesSerializer, BackgroundSetSerializer, BackgroundPowerSerializer, ChargingCurveSerializer, SimulationConfigSerializer, SimulationResultSerializer
@@ -71,21 +71,3 @@ class SimulationResultViewSet(viewsets.ModelViewSet):
     queryset = SimulationResult.objects.all()
     serializer_class = SimulationResultSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-
-# @api_view(['GET', 'POST'])
-# def simulationConfig_list(request):
-#     """
-#     List all the details of the existing SimulationConfig, or create a new SimulationConfig.
-#     """
-#     if request.method == 'GET':
-#         simulation = SimulationConfig.objects.all()
-#         serializer = SimulationConfigSerializer(simulation, many=True)
-#         return Response(serializer.data)
-
-#     elif request.method == 'POST':
-#         serializer = SimulationConfigSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
