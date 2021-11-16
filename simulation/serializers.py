@@ -5,7 +5,7 @@ from simulation.models import ArrivalProbabilities, ChargingCurve, BackgroundSet
 # and get them to hook up to the API
 
 
-class ArrivalProbabilitiesSerializer(serializers.HyperlinkedModelSerializer):
+class ArrivalProbabilitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArrivalProbabilities
         fields = ['arrivalProbId', 'binEntry', 'binEdge']
@@ -22,7 +22,7 @@ class ArrivalProbabilitiesSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-class BackgroundSetSerializer(serializers.HyperlinkedModelSerializer):
+class BackgroundSetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BackgroundSet
@@ -40,7 +40,7 @@ class BackgroundSetSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-class BackgroundPowerSerializer(serializers.HyperlinkedModelSerializer):
+class BackgroundPowerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BackgroundPower
@@ -60,7 +60,7 @@ class BackgroundPowerSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-class ChargingCurveSerializer(serializers.HyperlinkedModelSerializer):
+class ChargingCurveSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChargingCurve
         fields = ['chargingCurveId', 'time', 'power']
@@ -77,7 +77,7 @@ class ChargingCurveSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-class SimulationConfigSerializer(serializers.HyperlinkedModelSerializer):
+class SimulationConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = SimulationConfig
         fields = ['houseId', 'numberOfCars', 'backgroundSetId']
@@ -95,7 +95,7 @@ class SimulationConfigSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
 
-class SimulationResultSerializer(serializers.Serializer):
+class SimulationResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = SimulationResult
         fields = ['time', 'power']
