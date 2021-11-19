@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from simulation.models import ArrivalProbabilities, ChargingCurve, BackgroundSet, BackgroundPower, SimulationConfig, SimulationResult
 
-# insert SimulationConfig and SimulationResult classes as serializer models
-# and get them to hook up to the API
-
 
 class ArrivalProbabilitiesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,3 +105,25 @@ class SimulationResultSerializer(serializers.ModelSerializer):
         instance.power = validated_data.get('power', instance.power)
         instance.save()
         return instance
+
+
+# Simulation Logic (in the backend)
+
+# (1) Receives the POST simulation run.
+# (2) Read all simulation config into memory.
+# (3) Read from arrival prob.
+# (4) Read from charging curve.
+# (5) Read from backgroundSets and backgroundPower.
+# (6) Create empty simulation result - all 24hrs, but with zero electric current.
+#   - For each house.  (Store these simulation results in a list, where each one corresponds to a houseId)
+# (7) Add background into empty data container, using the backgroundSetId to pick the correct one.
+#   - For each house.
+# (8) Create empty simulation result for all houses.
+# (9) For each house:
+#       For each car:
+#          (a) Find time of arrival.
+#          (b) Add the current from the car to the current in the container for this house.
+#       Add this house to the total for all houses.
+# (10) Save the simulation results to the database.
+
+# The backend needs to be saved so the front end can show the result correctly!
