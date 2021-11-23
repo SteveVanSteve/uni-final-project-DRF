@@ -29,3 +29,6 @@ urlpatterns = format_suffix_patterns([
     path('simulation/<int:pk>/', views.SimulationResultDetail.as_view(),
          name='simulationresult-detail'),
 ])
+
+# The viewsets and urls will need to be changed for SimulationConfig and
+# SimulationResult in order for the simulation to run

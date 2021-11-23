@@ -71,3 +71,6 @@ class SimulationResultViewSet(viewsets.ModelViewSet):
     queryset = SimulationResult.objects.all()
     serializer_class = SimulationResultSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+# The viewsets and urls will need to be changed for SimulationConfig and
+# SimulationResult in order for the simulation to run
