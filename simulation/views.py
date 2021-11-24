@@ -1,9 +1,7 @@
 from django.db.models.expressions import F
 from django.shortcuts import render
-from drf_multiple_model.views import ObjectMultipleModelAPIView
 from rest_framework import views
 from rest_framework.response import Response
-from django.views.generic import TemplateView
 from .models import ArrivalProbabilities, BackgroundSet, BackgroundPower, ChargingCurve, SimulationConfig, SimulationResult
 from simulation.permissions import IsOwnerOrReadOnly
 from .serializers import ArrivalProbabilitiesSerializer, BackgroundSetSerializer, BackgroundPowerSerializer, ChargingCurveSerializer, SimulationConfigSerializer, SimulationResultSerializer
@@ -67,18 +65,16 @@ class SimulationConfigViewSet(viewsets.ModelViewSet):
 
 class SimulationResultViewSet(APIView):
     """
-    API endpoint that allows SimulationResult to be viewed.
+    An endpoint that allows SimulationResult to be viewed.
     """
 
     def get(self, request):
-        # Return the last simulation result
         simulationResults = SimulationResult.objects.all()
         serializer = SimulationResultSerializer(simulationResults, many=True)
         return Response({"SimulationResult": serializer.data})
 
     def post(self, request):
         simulationConfigs = request.data
-        # Deserialize the JSON.
         configSerializer = SimulationConfigSerializer(
             data=simulationConfigs, many=True)
         if not configSerializer.is_valid():
@@ -86,35 +82,21 @@ class SimulationResultViewSet(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"failure:" "Data is not valid"})
         serializedSimulationConfigs = configSerializer.data
 
-        # -Get the data from the MariaDB database.
-        # andrew: What data?, I am guessing for each house we neec to get the background data? WHat else?
-
-        # -Create a total (empty) power verses time structure in memory for all houses.
-        # andrew: Maybe this just means deleted the current Simulation Result model data?
         SimulationResultUtils.resetSimulationResult()
 
-        # Loop over all of the houses:
         for house in serializedSimulationConfigs:
             SimulationResultUtils.printHouse(house)
-            # -Create a power verses time structure in memory for this house.
             powerTimeStruct = SimulationResultUtils.createEmptyPowerStruct()
 
-            # -Add the power verses time from the background table to the house.
             powerTimeStruct = SimulationResultUtils.addPowerFromBackgroundSet(
                 house['backgroundSetId'], powerTimeStruct)
 
-            # -Loop over each car:
-            # todo: implement arrival probability
             for i in range(house['numberOfCars']):
                 print("Looping over another car: " + str(i))
-                #  i.      Use the arrival probability curve to find when the driver returns home.
-                # ii.      Add the power verses time curve to the house.
 
-            # -Add the power verses time curve for this house to the total for all houses.
             SimulationResultUtils.addHousePowerToSimulationResult(
                 powerTimeStruct)
 
-        # Return the total power verses time curve back to the user interface.
         simulationResults = SimulationResult.objects.all()
         serializer = SimulationResultSerializer(simulationResults, many=True)
         return Response(status=status.HTTP_200_OK, data={"success": "SimulationResult created successfully", "data": serializer.data})
@@ -122,13 +104,8 @@ class SimulationResultViewSet(APIView):
 
 class SimulationResultUtils():
 
-    # Have abstracted the methods used to make the code tidier / clearer and also makes the code more testable.
-    # Each of these methods could be unit tested
-
     def resetSimulationResult():
-        # Delete Previous Simulation
         SimulationResult.objects.all().delete()
-        # Create  new result with 0 as initial power
         currentTime = 0.00
         for i in range(24):
             SimulationResult.objects.create(time=currentTime, power=0.0)
@@ -143,7 +120,6 @@ class SimulationResultUtils():
     def createEmptyPowerStruct():
         powerTimeStruct = []
         currentTime = 0.00
-        # For every hour in 1 day create a new empty item in powerTimeStruct
         for i in range(24):
             powerTime = {"time": currentTime, "power": 0.0}
             powerTimeStruct.append(powerTime)
@@ -156,7 +132,6 @@ class SimulationResultUtils():
         count = 0
         updatedPowerTimeStruct = powerTimeStruct.copy()
         for hour in powerTimeStruct:
-            # Get the current time in loop and filter background power for this set and time
             time = hour.get('time')
             initialPower = hour.get('power')
             backgroundPower = BackgroundPower.objects.filter(
@@ -171,7 +146,6 @@ class SimulationResultUtils():
         return updatedPowerTimeStruct
 
     def addHousePowerToSimulationResult(powerTimeStruct):
-        # For each hour in the powerTimeStruct lets update the total power in SimulationResult
         for hour in powerTimeStruct:
             SimulationResult.objects.filter(time=hour.get('time')).update(
                 power=F('power') + hour.get('power'))
