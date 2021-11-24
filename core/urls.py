@@ -9,7 +9,6 @@ router.register(r'backgroundsets', views.BackgroundSetViewSet)
 router.register(r'backgroundpower', views.BackgroundPowerViewSet)
 router.register(r'chargingcurve', views.ChargingCurveViewSet)
 router.register(r'simulationconfig', views.SimulationConfigViewSet)
-router.register(r'simulationresult', views.SimulationResultViewSet)
 
 
 # Wire up our API using automatic URL routing.
@@ -17,8 +16,6 @@ router.register(r'simulationresult', views.SimulationResultViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('', include('simulation.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
-
-# The viewsets and urls will need to be changed for SimulationConfig and
-# SimulationResult in order for the simulation to run

@@ -92,19 +92,9 @@ class SimulationConfigSerializer(serializers.ModelSerializer):
         return instance
 
 
-class SimulationResultSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SimulationResult
-        fields = ['time', 'power']
-
-    def create(self, validated_data):
-        return SimulationResult.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.time = validated_data.get('time', instance.time)
-        instance.power = validated_data.get('power', instance.power)
-        instance.save()
-        return instance
+class SimulationResultSerializer(serializers.Serializer):
+    time = serializers.FloatField()
+    power = serializers.FloatField()
 
 
 # Simulation Logic (in the backend)

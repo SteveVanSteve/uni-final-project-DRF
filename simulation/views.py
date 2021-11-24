@@ -64,13 +64,90 @@ class SimulationConfigViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class SimulationResultViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows SimulationResult to be viewed.
-    """
-    queryset = SimulationResult.objects.all()
-    serializer_class = SimulationResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+# The Simulation Result has to be an APIView
+class SimulationResultViewSet(APIView):
 
-# The viewsets and urls will need to be changed for SimulationConfig and
-# SimulationResult in order for the simulation to run
+    def get(self, request):
+        # Return the last simulation result
+        simulationResults = SimulationResult.objects.all()
+        serializer = SimulationResultSerializer(simulationResults, many=True)
+        return Response({"SimulationResult": serializer.data})
+
+    def post(self, request):
+        simulationConfigs = request.data
+
+        # Deserialize the JSON.
+        configSerializer = SimulationConfigSerializer(
+            data=simulationConfigs, many=True)
+        if not configSerializer.is_valid():
+            print("Data is not valid")
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"failure:" "Data is not valid"})
+
+        serializedSimulationConfigs = configSerializer.data
+
+        # -Get the data from the MariaDB database.
+        # For each house we need to get the background data
+
+        # -Create a total (empty) power verses time structure in memory for all houses.
+        # Delete Previous Simulation
+        SimulationResult.objects.all().delete()
+        # Create  new result with 0 as initial power
+        currentTime = 0.00
+        for i in range(24):
+            SimulationResult.objects.create(time=currentTime, power=0.0)
+            currentTime += 1.00
+
+        # Loop over all of the houses:
+            # This is an example of looping over each house in the config and printing the data
+        for house in serializedSimulationConfigs:
+            print("\n House:")
+            print("HouseId: " + str(house['houseId']))
+            print("numberOfCars: " + str(house['numberOfCars']))
+            print("backgroundSet: " + str(house['backgroundSetId']))
+
+            # -Create a power verses time structure in memory for this house.
+            # Unsure what this should look like,
+            # We want to create an empty list for the house(?)
+            powerTimeStruct = []
+            currentTime = 0.00
+            for i in range(24):
+                powerTime = {"time": currentTime, "power": 0.0}
+                powerTimeStruct.append(powerTime)
+                currentTime += 1.00
+            print('powerTimeStruct:')
+            print(powerTimeStruct)
+
+            # -Add the power verses time from the background table to the house.
+
+            # For each hour in the houses power time structure
+            # length = len(powerTimeStruct)
+            # powerTimexWithBackground=powerTimeStruct
+            # for powerTimex in powerTimeStruct:
+            #     #Get the current time in loop and filter background power for this set and time
+            #     print(powerTimex)
+
+            #     timex=powerTimex.get('time')
+            #     initialPower=powerTimex.get('power')
+
+            #     backgroundPower = BackgroundPower.objects.filter(backgroundSetId=house['backgroundSetId'], time=timex)
+            #     print('backgroundsets with id:'+str(house['backgroundSetId']) + 'and time: '+str(timex))
+            #     if backgroundPower:
+            #         newPowerTime={"time": timex, "power": initialPower+backgroundPower.first().power}
+            #         print(newPowerTime)
+            #         #powerTimexWithBackground.insert(i,newPowerTime )
+            # print('powerTimeStruct with background set added:')
+            # print(powerTimeStruct)
+
+            # -Loop over each car:
+            for i in range(house['numberOfCars']):
+                print("Looping over another car: " + str(i))
+                #  i.      Use the arrival probability curve to find when the driver returns home.
+                # ii.      Add the power verses time curve to the house.
+
+            # -Add the power verses time curve for this house to the total for all houses.
+            # Need to add the each power and time value to the total already in Simlation Result
+
+        # Return the total power verses time curve back to the user interface.
+        simulationResults = SimulationResult.objects.all()
+        serializer = SimulationResultSerializer(simulationResults, many=True)
+        return Response(status=status.HTTP_200_OK, data={"success": "SimulationResult created successfully", "data": serializer.data})
