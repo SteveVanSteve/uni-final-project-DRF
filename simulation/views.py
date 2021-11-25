@@ -60,7 +60,8 @@ class SimulationConfigViewSet(viewsets.ModelViewSet):
     """
     queryset = SimulationConfig.objects.all()
     serializer_class = SimulationConfigSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = []
+    permission_classes = []
 
 
 class SimulationResultViewSet(APIView):
