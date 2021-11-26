@@ -14,8 +14,10 @@ from django.contrib.auth.models import User
 from rest_framework import permissions
 from simulation.permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.reverse import reverse
+import random
+import numpy
 
 
 class ArrivalProbabilitiesViewSet(viewsets.ModelViewSet):
@@ -60,13 +62,13 @@ class SimulationConfigViewSet(viewsets.ModelViewSet):
     """
     queryset = SimulationConfig.objects.all()
     serializer_class = SimulationConfigSerializer
-    authentication_classes = []
     permission_classes = []
+    authentication_classes = []
 
 
 class SimulationResultViewSet(APIView):
     """
-    An endpoint that allows SimulationResult to be viewed.
+    API endpoint that allows SimulationResult to be viewed.
     """
 
     def get(self, request):
@@ -87,6 +89,7 @@ class SimulationResultViewSet(APIView):
 
         for house in serializedSimulationConfigs:
             SimulationResultUtils.printHouse(house)
+
             powerTimeStruct = SimulationResultUtils.createEmptyPowerStruct()
 
             powerTimeStruct = SimulationResultUtils.addPowerFromBackgroundSet(
@@ -94,6 +97,12 @@ class SimulationResultViewSet(APIView):
 
             for i in range(house['numberOfCars']):
                 print("Looping over another car: " + str(i))
+
+                carArrivalTime = SimulationResultUtils.getArrivalTimeFromProbability()
+                print("Car arrival time predicted as " + str(carArrivalTime))
+
+                powerTimeStruct = SimulationResultUtils.addPowerFromCharginCurve(
+                    carArrivalTime, powerTimeStruct)
 
             SimulationResultUtils.addHousePowerToSimulationResult(
                 powerTimeStruct)
@@ -106,7 +115,9 @@ class SimulationResultViewSet(APIView):
 class SimulationResultUtils():
 
     def resetSimulationResult():
+
         SimulationResult.objects.all().delete()
+
         currentTime = 0.00
         for i in range(24):
             SimulationResult.objects.create(time=currentTime, power=0.0)
@@ -121,6 +132,7 @@ class SimulationResultUtils():
     def createEmptyPowerStruct():
         powerTimeStruct = []
         currentTime = 0.00
+
         for i in range(24):
             powerTime = {"time": currentTime, "power": 0.0}
             powerTimeStruct.append(powerTime)
@@ -133,6 +145,7 @@ class SimulationResultUtils():
         count = 0
         updatedPowerTimeStruct = powerTimeStruct.copy()
         for hour in powerTimeStruct:
+
             time = hour.get('time')
             initialPower = hour.get('power')
             backgroundPower = BackgroundPower.objects.filter(
@@ -146,7 +159,49 @@ class SimulationResultUtils():
         print(updatedPowerTimeStruct)
         return updatedPowerTimeStruct
 
+    def addPowerFromChargingCurve(startTimeOffset, powerTimeStruct):
+        updatedPowerTimeStruct = powerTimeStruct.copy()
+
+        count = 0
+        for hour in powerTimeStruct:
+            initialPower = hour.get('power')
+            hourTime = hour.get('time')
+            minTime = hourTime-startTimeOffset
+            maxTime = minTime + 1
+
+            chargingCurveFilteredByHour = ChargingCurve.objects.filter(
+                time__gte=minTime, time__lte=maxTime)
+            if chargingCurveFilteredByHour:
+                totalPowerToAdd = 0
+
+                for powerToAdd in chargingCurveFilteredByHour:
+                    totalPowerToAdd += powerToAdd.power
+
+                newPowerTime = {"time": hourTime,
+                                "power": initialPower+totalPowerToAdd}
+                updatedPowerTimeStruct[count] = newPowerTime
+            count += 1
+        print('powerTimeStruct with charging curve added:')
+        print(updatedPowerTimeStruct)
+        return updatedPowerTimeStruct
+
     def addHousePowerToSimulationResult(powerTimeStruct):
+
         for hour in powerTimeStruct:
             SimulationResult.objects.filter(time=hour.get('time')).update(
                 power=F('power') + hour.get('power'))
+            SimulationResult.objects.filter(time=hour.get('time')).update(
+                power=F('power') + hour.get('power'))
+
+    def getArrivalTimeFromProbability():
+        randomInt = random.randint(1, 100)
+        arrivalProbabilities = ArrivalProbabilities.objects.all()
+        lastEntry = 0
+        for arrivalProbability in arrivalProbabilities:
+            entry = arrivalProbability.binEntry + lastEntry
+            if lastEntry <= randomInt <= entry:
+                print("Arrival time chosen is: " +
+                      str(arrivalProbability.binEdge))
+                return arrivalProbability.binEdge
+            else:
+                lastEntry = entry
