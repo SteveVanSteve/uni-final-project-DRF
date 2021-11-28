@@ -74,8 +74,6 @@ class SimulationResultViewSet(APIView):
     """
     API endpoint that allows SimulationResult to be viewed.
     """
-    permission_classes = []
-    authentication_classes = []
 
     def get(self, request):
         simulationResults = SimulationResult.objects.all()
