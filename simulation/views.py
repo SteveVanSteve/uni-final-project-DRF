@@ -26,7 +26,8 @@ class ArrivalProbabilitiesViewSet(viewsets.ModelViewSet):
     """
     queryset = ArrivalProbabilities.objects.all()
     serializer_class = ArrivalProbabilitiesSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
+    authentication_classes = []
 
 
 class BackgroundSetViewSet(viewsets.ModelViewSet):
@@ -35,7 +36,8 @@ class BackgroundSetViewSet(viewsets.ModelViewSet):
     """
     queryset = BackgroundSet.objects.all()
     serializer_class = BackgroundSetSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
+    authentication_classes = []
 
 
 class BackgroundPowerViewSet(viewsets.ModelViewSet):
@@ -44,7 +46,8 @@ class BackgroundPowerViewSet(viewsets.ModelViewSet):
     """
     queryset = BackgroundPower.objects.all()
     serializer_class = BackgroundPowerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
+    authentication_classes = []
 
 
 class ChargingCurveViewSet(viewsets.ModelViewSet):
@@ -53,7 +56,8 @@ class ChargingCurveViewSet(viewsets.ModelViewSet):
     """
     queryset = ChargingCurve.objects.all()
     serializer_class = ChargingCurveSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
+    authentication_classes = []
 
 
 class SimulationConfigViewSet(viewsets.ModelViewSet):
@@ -70,6 +74,8 @@ class SimulationResultViewSet(APIView):
     """
     API endpoint that allows SimulationResult to be viewed.
     """
+    permission_classes = []
+    authentication_classes = []
 
     def get(self, request):
         simulationResults = SimulationResult.objects.all()
