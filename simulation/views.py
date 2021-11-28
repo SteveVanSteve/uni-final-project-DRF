@@ -17,7 +17,6 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.reverse import reverse
 import random
-import numpy
 
 
 class ArrivalProbabilitiesViewSet(viewsets.ModelViewSet):
@@ -93,9 +92,7 @@ class SimulationResultViewSet(APIView):
 
         for house in serializedSimulationConfigs:
             SimulationResultUtils.printHouse(house)
-
             powerTimeStruct = SimulationResultUtils.createEmptyPowerStruct()
-
             powerTimeStruct = SimulationResultUtils.addPowerFromBackgroundSet(
                 house['backgroundSetId'], powerTimeStruct)
 
@@ -163,11 +160,12 @@ class SimulationResultUtils():
         print(updatedPowerTimeStruct)
         return updatedPowerTimeStruct
 
-    def addPowerFromChargingCurve(startTimeOffset, powerTimeStruct):
+    def addPowerFromCharginCurve(startTimeOffset, powerTimeStruct):
         updatedPowerTimeStruct = powerTimeStruct.copy()
 
         count = 0
         for hour in powerTimeStruct:
+
             initialPower = hour.get('power')
             hourTime = hour.get('time')
             minTime = hourTime-startTimeOffset
@@ -194,8 +192,6 @@ class SimulationResultUtils():
         for hour in powerTimeStruct:
             SimulationResult.objects.filter(time=hour.get('time')).update(
                 power=F('power') + hour.get('power'))
-            SimulationResult.objects.filter(time=hour.get('time')).update(
-                power=F('power') + hour.get('power'))
 
     def getArrivalTimeFromProbability():
         randomInt = random.randint(1, 100)
@@ -206,6 +202,7 @@ class SimulationResultUtils():
             if lastEntry <= randomInt <= entry:
                 print("Arrival time chosen is: " +
                       str(arrivalProbability.binEdge))
+
                 return arrivalProbability.binEdge
             else:
                 lastEntry = entry
