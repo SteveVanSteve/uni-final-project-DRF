@@ -11,8 +11,6 @@ router.register(r'chargingcurve', views.ChargingCurveViewSet)
 router.register(r'simulationconfig', views.SimulationConfigViewSet)
 
 
-# Wire up our API using automatic URL routing.
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
