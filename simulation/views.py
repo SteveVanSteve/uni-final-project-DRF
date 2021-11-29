@@ -160,7 +160,7 @@ class SimulationResultUtils():
         print(updatedPowerTimeStruct)
         return updatedPowerTimeStruct
 
-    def addPowerFromCharginCurve(startTimeOffset, powerTimeStruct):
+    def addPowerFromChargingCurve(startTimeOffset, powerTimeStruct):
         updatedPowerTimeStruct = powerTimeStruct.copy()
 
         count = 0
