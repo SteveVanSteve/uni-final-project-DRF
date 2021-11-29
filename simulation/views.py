@@ -102,7 +102,7 @@ class SimulationResultViewSet(APIView):
                 carArrivalTime = SimulationResultUtils.getArrivalTimeFromProbability()
                 print("Car arrival time predicted as " + str(carArrivalTime))
 
-                powerTimeStruct = SimulationResultUtils.addPowerFromCharginCurve(
+                powerTimeStruct = SimulationResultUtils.addPowerFromChargingCurve(
                     carArrivalTime, powerTimeStruct)
 
             SimulationResultUtils.addHousePowerToSimulationResult(
