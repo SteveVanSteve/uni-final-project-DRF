@@ -24,7 +24,6 @@ class ArrivalProbabilitiesViewSet(viewsets.ModelViewSet):
     API endpoint that allows ArrivalProbabilities to be viewed or edited.
     """
     queryset = ArrivalProbabilities.objects.all()
-    serializer_class = ArrivalProbabilitiesSerializer
     permission_classes = []
     authentication_classes = []
 
@@ -54,7 +53,6 @@ class ChargingCurveViewSet(viewsets.ModelViewSet):
     API endpoint that allows ChargingCurves to be viewed or edited.
     """
     queryset = ChargingCurve.objects.all()
-    serializer_class = ChargingCurveSerializer
     permission_classes = []
     authentication_classes = []
 
@@ -90,6 +88,8 @@ class SimulationResultViewSet(APIView):
 
         SimulationResultUtils.resetSimulationResult()
 
+        housesResult = []
+
         for house in serializedSimulationConfigs:
             SimulationResultUtils.printHouse(house)
             powerTimeStruct = SimulationResultUtils.createEmptyPowerStruct()
@@ -102,27 +102,23 @@ class SimulationResultViewSet(APIView):
                 carArrivalTime = SimulationResultUtils.getArrivalTimeFromProbability()
                 print("Car arrival time predicted as " + str(carArrivalTime))
 
-                powerTimeStruct = SimulationResultUtils.addPowerFromChargingCurve(
+                powerTimeStruct = SimulationResultUtils.addPowerFromCharginCurve(
                     carArrivalTime, powerTimeStruct)
 
             SimulationResultUtils.addHousePowerToSimulationResult(
-                powerTimeStruct)
+                powerTimeStruct, house['houseId'])
+            houseResult = {"simulation": powerTimeStruct}
+            houseResult.update(house)
+            housesResult.append(houseResult)
 
-        simulationResults = SimulationResult.objects.all()
-        serializer = SimulationResultSerializer(simulationResults, many=True)
-        return Response(status=status.HTTP_200_OK, data={"success": "SimulationResult created successfully", "data": serializer.data})
+        return Response(status=status.HTTP_200_OK, data={"success": "SimulationResult created successfully", "data": housesResult})
 
 
 class SimulationResultUtils():
 
     def resetSimulationResult():
-
         SimulationResult.objects.all().delete()
-
         currentTime = 0.00
-        for i in range(24):
-            SimulationResult.objects.create(time=currentTime, power=0.0)
-            currentTime += 1.00
 
     def printHouse(house):
         print("\n House:")
@@ -146,7 +142,6 @@ class SimulationResultUtils():
         count = 0
         updatedPowerTimeStruct = powerTimeStruct.copy()
         for hour in powerTimeStruct:
-
             time = hour.get('time')
             initialPower = hour.get('power')
             backgroundPower = BackgroundPower.objects.filter(
@@ -160,12 +155,10 @@ class SimulationResultUtils():
         print(updatedPowerTimeStruct)
         return updatedPowerTimeStruct
 
-    def addPowerFromChargingCurve(startTimeOffset, powerTimeStruct):
+    def addPowerFromCharginCurve(startTimeOffset, powerTimeStruct):
         updatedPowerTimeStruct = powerTimeStruct.copy()
-
         count = 0
         for hour in powerTimeStruct:
-
             initialPower = hour.get('power')
             hourTime = hour.get('time')
             minTime = hourTime-startTimeOffset
@@ -187,11 +180,11 @@ class SimulationResultUtils():
         print(updatedPowerTimeStruct)
         return updatedPowerTimeStruct
 
-    def addHousePowerToSimulationResult(powerTimeStruct):
+    def addHousePowerToSimulationResult(powerTimeStruct, houseId):
 
         for hour in powerTimeStruct:
-            SimulationResult.objects.filter(time=hour.get('time')).update(
-                power=F('power') + hour.get('power'))
+            SimulationResult.objects.create(
+                houseId=houseId, time=hour.get('time'), power=hour.get('power'))
 
     def getArrivalTimeFromProbability():
         randomInt = random.randint(1, 100)
