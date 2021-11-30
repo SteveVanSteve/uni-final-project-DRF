@@ -52,8 +52,12 @@ class SimulationConfig(models.Model):
     def __str__(self):
         return "{}-{}".format(self.houseId, self.numberOfCars, self.backgroundSetId)
 
+    def __str__(self):
+        return "{}-{}".format(self.houseId, self.numberOfCars, self.backgroundSetId)
+
 
 class SimulationResult(models.Model):
+    houseId = models.IntegerField(null=False)
     time = models.FloatField(null=False, default=None)
     power = models.FloatField(null=False, default=None)
 
