@@ -24,6 +24,7 @@ class ArrivalProbabilitiesViewSet(viewsets.ModelViewSet):
     API endpoint that allows ArrivalProbabilities to be viewed or edited.
     """
     queryset = ArrivalProbabilities.objects.all()
+    serializer_class = ArrivalProbabilitiesSerializer
     permission_classes = []
     authentication_classes = []
 
@@ -93,18 +94,14 @@ class SimulationResultViewSet(APIView):
         for house in serializedSimulationConfigs:
             SimulationResultUtils.printHouse(house)
             powerTimeStruct = SimulationResultUtils.createEmptyPowerStruct()
-            powerTimeStruct = SimulationResultUtils.addPowerFromBackgroundSet(
-                house['backgroundSetId'], powerTimeStruct)
 
-            for i in range(house['numberOfCars']):
-                print("Looping over another car: " + str(i))
+            for i in range(100):
+                print(i)
+                powerTimeStruct = SimulationResultUtils.generateSimulationForDay(
+                    house, powerTimeStruct)
 
-                carArrivalTime = SimulationResultUtils.getArrivalTimeFromProbability()
-                print("Car arrival time predicted as " + str(carArrivalTime))
-
-                powerTimeStruct = SimulationResultUtils.addPowerFromCharginCurve(
-                    carArrivalTime, powerTimeStruct)
-
+            print('Total after x days')
+            print(powerTimeStruct)
             SimulationResultUtils.addHousePowerToSimulationResult(
                 powerTimeStruct, house['houseId'])
             houseResult = {"simulation": powerTimeStruct}
@@ -118,7 +115,6 @@ class SimulationResultUtils():
 
     def resetSimulationResult():
         SimulationResult.objects.all().delete()
-        currentTime = 0.00
 
     def printHouse(house):
         print("\n House:")
@@ -186,9 +182,8 @@ class SimulationResultUtils():
             SimulationResult.objects.create(
                 houseId=houseId, time=hour.get('time'), power=hour.get('power'))
 
-# for getting the generating x thousand days this is where that code could go
-
     def getArrivalTimeFromProbability():
+
         randomInt = random.randint(1, 100)
         arrivalProbabilities = ArrivalProbabilities.objects.all()
         lastEntry = 0
@@ -201,3 +196,17 @@ class SimulationResultUtils():
                 return arrivalProbability.binEdge
             else:
                 lastEntry = entry
+
+    def generateSimulationForDay(house, powerTimeStruct):
+        powerTimeStruct = SimulationResultUtils.addPowerFromBackgroundSet(
+            house['backgroundSetId'], powerTimeStruct)
+
+        for i in range(house['numberOfCars']):
+            print("Looping over another car: " + str(i))
+
+            carArrivalTime = SimulationResultUtils.getArrivalTimeFromProbability()
+            print("Car arrival time predicted as " + str(carArrivalTime))
+
+            powerTimeStruct = SimulationResultUtils.addPowerFromCharginCurve(
+                carArrivalTime, powerTimeStruct)
+        return powerTimeStruct
