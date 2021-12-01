@@ -186,6 +186,8 @@ class SimulationResultUtils():
             SimulationResult.objects.create(
                 houseId=houseId, time=hour.get('time'), power=hour.get('power'))
 
+# for getting the generating x thousand days this is where that code could go
+
     def getArrivalTimeFromProbability():
         randomInt = random.randint(1, 100)
         arrivalProbabilities = ArrivalProbabilities.objects.all()
