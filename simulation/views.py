@@ -54,6 +54,7 @@ class ChargingCurveViewSet(viewsets.ModelViewSet):
     API endpoint that allows ChargingCurves to be viewed or edited.
     """
     queryset = ChargingCurve.objects.all()
+    serializer_class = ChargingCurveSerializer
     permission_classes = []
     authentication_classes = []
 
