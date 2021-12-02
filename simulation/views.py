@@ -151,7 +151,7 @@ class SimulationResultUtils():
         print(updatedPowerTimeStruct)
         return updatedPowerTimeStruct
 
-    def addPowerFromCharginCurve(startTimeOffset, powerTimeStruct):
+    def addPowerFromChargingCurve(startTimeOffset, powerTimeStruct):
         updatedPowerTimeStruct = powerTimeStruct.copy()
         count = 0
         for hour in powerTimeStruct:
@@ -207,6 +207,6 @@ class SimulationResultUtils():
             carArrivalTime = SimulationResultUtils.getArrivalTimeFromProbability()
             print("Car arrival time predicted as " + str(carArrivalTime))
 
-            powerTimeStruct = SimulationResultUtils.addPowerFromCharginCurve(
+            powerTimeStruct = SimulationResultUtils.addPowerFromChargingCurve(
                 carArrivalTime, powerTimeStruct)
         return powerTimeStruct
